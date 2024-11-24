@@ -54,7 +54,7 @@ class AdminAuthenticationController extends Controller
 
         Mail::to($request->email)->send(new AdminSendResetLinkMail($token, $request->email));
 
-        return redirect()->back()->with('success', 'A mail has been sent to your email address please check!');
+        return redirect()->back()->with('success', __('A mail has been sent to your email address please check!'));
     }
 
     public function resetPassword($token)
@@ -67,13 +67,13 @@ class AdminAuthenticationController extends Controller
         $admin = Admin::where(['email' => $request->email, 'remember_token' => $request->token])->first();
 
         if (!$admin) {
-            return back()->with('error', 'token is invalid');
+            return back()->with('error', __('token is invalid'));
         }
 
         $admin->password = bcrypt($request->password);
         $admin->remember_token = null;
         $admin->save();
 
-        return redirect()->route('admin.login')->with('success', 'Password reset successfull');
+        return redirect()->route('admin.login')->with('success', __('Password reset successfull'));
     }
 }
