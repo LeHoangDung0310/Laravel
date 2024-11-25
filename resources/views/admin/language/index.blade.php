@@ -59,7 +59,7 @@
                                         <a href="{{ route('admin.language.edit', $language->id) }}"
                                             class="btn btn-primary"><i class="fas fa-edit"></i></a>
                                         <a href="{{ route('admin.language.destroy', $language->id) }}"
-                                            class="btn btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                            class="btn btn-danger delete-item"><i class="fas fa-trash-alt"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
