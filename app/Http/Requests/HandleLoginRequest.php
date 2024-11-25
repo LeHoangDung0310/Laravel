@@ -42,4 +42,5 @@ class HandleLoginRequest extends FormRequest
             ]);
         }
     }
+
 }

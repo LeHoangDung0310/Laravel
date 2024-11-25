@@ -23,6 +23,7 @@ class AdminSendResetLinkMail extends Mailable
     {
         $this->token = $token;
         $this->email = $email;
+
     }
 
     /**

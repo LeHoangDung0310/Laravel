@@ -7,8 +7,9 @@ use App\Http\Requests\AdminResetPasswordRequest;
 use App\Http\Requests\HandleLoginRequest;
 use App\Http\Requests\SendResetLinkRequest;
 use App\Mail\AdminSendResetLinkMail;
-use App\Models\Admin;;
+use App\Models\Admin;
 
+;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -55,6 +56,7 @@ class AdminAuthenticationController extends Controller
         Mail::to($request->email)->send(new AdminSendResetLinkMail($token, $request->email));
 
         return redirect()->back()->with('success', __('A mail has been sent to your email address please check!'));
+
     }
 
     public function resetPassword($token)
@@ -66,7 +68,7 @@ class AdminAuthenticationController extends Controller
     {
         $admin = Admin::where(['email' => $request->email, 'remember_token' => $request->token])->first();
 
-        if (!$admin) {
+        if(!$admin){
             return back()->with('error', __('token is invalid'));
         }
 
@@ -75,5 +77,6 @@ class AdminAuthenticationController extends Controller
         $admin->save();
 
         return redirect()->route('admin.login')->with('success', __('Password reset successfull'));
+
     }
 }
