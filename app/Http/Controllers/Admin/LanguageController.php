@@ -87,10 +87,13 @@ class LanguageController extends Controller
     {
         try {
             $language = Language::findOrFail($id);
+            if ($language->lang === 'en' || $language->lang === 'vi') {
+                return response(['status' => 'error', 'message' => __('Cannot delete this language!')]);
+            }
             $language->delete();
             return response(['status' => 'success', 'message' => __('Deleted Successfully!')]);
         } catch (\Throwable $th) {
-            return response(['status' => 'error', 'message' => __('something went wrong!')]);
+            return response(['status' => 'error', 'message' => __('Something went wrong!')]);
         }
     }
 }
