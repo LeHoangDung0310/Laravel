@@ -123,7 +123,7 @@ class NewsController extends Controller
         $news = News::findOrFail($id);
 
         /** Handle image */
-        $imagePath = $this->handleFileUpload($request, 'image', $news->image);
+        $imagePath = $this->handleFileUpload($request, 'image');
 
         $news->language = $request->language;
         $news->category_id = $request->category;
@@ -175,5 +175,19 @@ class NewsController extends Controller
         $news->delete();
 
         return response(['status' => 'success', 'message' => __('Deleted Successfully!')]);
+    }
+
+    /**
+     * Copy news
+     */
+    public function copyNews(string $id)
+    {
+        $news = News::findOrFail($id);
+        $copyNews = $news->replicate();
+        $copyNews->save();
+
+        toast(__('Copied Successfully!'), 'success');
+
+        return redirect()->back();
     }
 }
