@@ -31,3 +31,6 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 Route::get('language', LanguageController::class)->name('language');
+
+/** News Details Routes */
+Route::get('news-details/{slug}', [HomeController::class, 'ShowNews'])->name('news-details');
