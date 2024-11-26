@@ -1,5 +1,9 @@
 @php
     $languages = \App\Models\Language::where('status', 1)->get();
+    $FeaturedCategories = \App\Models\Category::where(['status' => 1, 'language' => getLangauge(), 'show_at_nav' => 1])->get();
+
+    $categories = \App\Models\Category::where(['status' => 1, 'language' => getLangauge(), 'show_at_nav' => 0])->get();
+
 @endphp
 
 <header class="bg-light">
@@ -29,9 +33,9 @@
                 <div class="col-sm-6 col-md-4">
                     <div class="list-unstyled topbar-right d-flex align-items-center justify-content-end">
                         <div class="topbar_language">
-                            <select>
+                            <select id="site-language">
                                 @foreach ($languages as $language)
-                                    <option value="{{ $language->lang }}" {{ $language->default === 1 ? 'selected' : '' }}>{{ $language->name }}</option>
+                                    <option value="{{ $language->lang }}" {{ getLangauge() === $language->lang ? 'selected' : '' }}>{{ $language->name }}</option>
                                 @endforeach
                             </select>
                         </div>
