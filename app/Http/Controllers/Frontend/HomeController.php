@@ -25,13 +25,13 @@ class HomeController extends Controller
             ->activeEntries()->withLocalize()
             ->first();
 
-            $recentNews = News::with(['category', 'auther'])->where('slug','!=', $news->slug)
+        $recentNews = News::with(['category', 'auther'])->where('slug','!=', $news->slug)
             ->activeEntries()->withLocalize()->orderBy('id', 'DESC')->take(4)->get();
 
-            $mostCommonTags = $this->mostCommonTags();
+        $mostCommonTags = $this->mostCommonTags();
 
 
-            $this->countView($news);
+        $this->countView($news);
 
        return view('frontend.news-details', compact('news', 'recentNews', 'mostCommonTags'));
     }
@@ -46,9 +46,12 @@ class HomeController extends Controller
                 $news->increment('views');
             }
             session(['viewed_posts' => $postIds]);
+
         }else {
             session(['viewed_posts' => [$news->id]]);
+
             $news->increment('views');
+
         }
     }
 
@@ -62,21 +65,48 @@ class HomeController extends Controller
             ->get();
     }
 
-
-
-
     public function handleComment(Request $request)
     {
 
         $request->validate([
             'comment' => ['required', 'string', 'max:1000']
         ]);
+
         $comment = new Comment();
         $comment->news_id = $request->news_id;
         $comment->user_id = Auth::user()->id;
         $comment->parent_id = $request->parent_id;
         $comment->comment = $request->comment;
         $comment->save();
+
         return redirect()->back();
+    }
+
+    public function handleReplay(Request $request)
+    {
+
+        $request->validate([
+            'replay' => ['required', 'string', 'max:1000']
+        ]);
+
+        $comment = new Comment();
+        $comment->news_id = $request->news_id;
+        $comment->user_id = Auth::user()->id;
+        $comment->parent_id = $request->parent_id;
+        $comment->comment = $request->replay;
+        $comment->save();
+
+        return redirect()->back();
+    }
+
+    public function commentDestory(Request $request)
+    {
+        $comment = Comment::findOrFail($request->id);
+        if(Auth::user()->id === $comment->user_id){
+            $comment->delete();
+            return response(['status' => 'success', 'message' => 'Deleted Successfully!']);
+        }
+
+        return response(['status' => 'error', 'message' => 'Someting went wrong!']);
     }
 }

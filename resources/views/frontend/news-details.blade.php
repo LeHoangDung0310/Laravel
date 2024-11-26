@@ -187,7 +187,7 @@
                     <h3 class="comments-title">2 Comments:</h3>
 
                     <ol class="comment-list">
-                        @foreach ($news->comments as $comment)
+                        @foreach ($news->comments()->whereNull('parent_id')->get() as $comment)
 
                         <li class="comment">
                             <aside class="comment-body">
@@ -213,48 +213,82 @@
 
                                 <div class="reply">
                                     <a href="#" class="comment-reply-link" data-toggle="modal"
-                                        data-target="#exampleModal">Reply</a>
-                                    <span>
+                                        data-target="#exampleModal-{{ $comment->id }}">Reply</a>
+                                    <span class="delete-msg" data-id="{{ $comment->id }}">
                                         <i class="fa fa-trash"></i>
                                     </span>
                                 </div>
                             </aside>
+
+                            @if ($comment->reply()->count() > 0)
+                            @foreach ($comment->reply as $reply)
 
                             <ol class="children">
                                 <li class="comment">
                                     <aside class="comment-body">
                                         <div class="comment-meta">
                                             <div class="comment-author vcard">
-                                                <img src="images/news3.jpg" class="avatar" alt="image">
-                                                <b class="fn">Sinmun</b>
+                                                <img src="{{ asset('frontend/assets/images/avatar.png') }}" class="avatar" alt="image">
+                                                <b class="fn">{{ $reply->user->name }}</b>
                                                 <span class="says">says:</span>
                                             </div>
 
                                             <div class="comment-metadata">
-                                                <a href="#">
-                                                    <span>April 24, 2019 at 10:59 am</span>
+                                                <a href="javascript:;">
+                                                    <span>{{ date('M, d, Y H:i', strtotime($reply->created_at)) }}</span>
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div class="comment-content">
-                                            <p>Lorem Ipsum has been the industry’s standard dummy text ever since
-                                                the 1500s, when an
-                                                unknown printer took a galley of type and scrambled it to make a
-                                                type specimen book.</p>
+                                            <p>{{ $reply->comment }}</p>
                                         </div>
 
                                         <div class="reply">
+                                            @if ($loop->last)
                                             <a href="#" class="comment-reply-link" data-toggle="modal"
-                                                data-target="#exampleModal">Reply</a>
-                                            <span>
+                                                data-target="#exampleModal-{{ $comment->id }}">Reply</a>
+                                            @endif
+
+                                            <span class="delete-msg" style="margin-left: auto;" data-id="{{ $reply->id }}">
                                                 <i class="fa fa-trash"></i>
                                             </span>
                                         </div>
                                     </aside>
                                 </li>
                             </ol>
+                            @endforeach
+                            @endif
+
                         </li>
+
+                        <!-- Modal -->
+                        <div class="comment_modal">
+                            <div class="modal fade" id="exampleModal-{{ $comment->id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Write Your Comment</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{{ route('news-comment-replay') }}" method="POST">
+                                                @csrf
+                                                <textarea name="replay" cols="30" rows="7" placeholder="Type. . ."></textarea>
+                                                <input type="hidden" name="news_id" value="{{ $news->id }}">
+                                                <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+
+                                                <button type="submit">submit</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         @endforeach
 
                     </ol>
@@ -295,32 +329,9 @@
                 </div>
                 @endauth
 
-                <!-- Modal -->
-                <div class="comment_modal">
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Write Your Comment</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="#">
-                                        <textarea cols="30" rows="7" placeholder="Type. . ."></textarea>
-                                        <button type="submit">submit</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
 
                 <!-- end comment -->
-
-
 
                 <div class="row">
                     <div class="col-md-6">
@@ -724,3 +735,54 @@
     </div>
 </section>
 @endsection
+
+@push('content')
+<script>
+    $(document).ready(function(){
+        $('.delete-msg').on('click', function(e) {
+                e.preventDefault();
+                let id = $(this).data('id');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            method: 'DELETE',
+                            url: "{{ route('news-comment-destroy') }}",
+                            data:{id:id},
+                            success: function(data) {
+                                if (data.status === 'success') {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        data.message,
+                                        'success'
+                                    )
+                                    window.location.reload();
+                                } else if (data.status === 'error') {
+                                    Swal.fire(
+                                        'Error!',
+                                        data.message,
+                                        'error'
+                                    )
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error(error);
+                            }
+                        });
+
+
+                    }
+                })
+            })
+
+    })
+</script>
+@endpush
