@@ -26,6 +26,7 @@
                         <h1>
                             {!! $news->title !!}
                         </h1>
+
                     </div>
                     <hr>
                     <div class="wrap__article-detail-info">
@@ -38,6 +39,7 @@
                             </li>
                             <li class="list-inline-item">
                                 <span class="text-dark text-capitalize ml-1">
+
                                     {{ date('M D, Y', strtotime($news->created_at)) }}
                                 </span>
                             </li>
@@ -48,9 +50,12 @@
                                 <a href="#">
                                     {{ $news->category->name }}
                                 </a>
+
+
                             </li>
                         </ul>
                     </div>
+
                     <div class="wrap__article-detail-image mt-4">
                         <figure>
                             <img src="{{ asset($news->image) }}" alt="" class="img-fluid">
@@ -59,11 +64,12 @@
                     <div class="wrap__article-detail-content">
                         <div class="total-views">
                             <div class="total-views-read">
-                                   {{ $news->views }}
+                                {{ convertToKFormat($news->views) }}
                                 <span>
                                     {{ __('views') }}
                                 </span>
                             </div>
+
                             <ul class="list-inline">
                                 <span class="share">share on:</span>
                                 <li class="list-inline-item">
@@ -71,6 +77,7 @@
                                         <i class="fa fa-facebook-f"></i>
                                         <span>facebook</span>
                                     </a>
+
                                 </li>
                                 <li class="list-inline-item">
                                     <a class="btn btn-social-o twitter" href="#">
@@ -90,20 +97,25 @@
                                         <span>telegram</span>
                                     </a>
                                 </li>
+
                                 <li class="list-inline-item">
                                     <a class="btn btn-linkedin-o linkedin" href="#">
                                         <i class="fa fa-linkedin"></i>
                                         <span>linkedin</span>
                                     </a>
                                 </li>
+
                             </ul>
                         </div>
                         <p class="has-drop-cap-fluid">
                             {!! $news->content !!}
                         </p>
                     </div>
+
+
                 </div>
                 <!-- end content article detail -->
+
                 <!-- tags -->
                 <!-- News Tags -->
                 <div class="blog-tags">
@@ -112,34 +124,18 @@
                             <i class="fa fa-tags">
                             </i>
                         </li>
+                        @foreach ($news->tags as $tag)
                         <li class="list-inline-item">
                             <a href="#">
-                                #property
+                                #{{ $tag->name }}
                             </a>
                         </li>
-                        <li class="list-inline-item">
-                            <a href="#">
-                                #sea
-                            </a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="#">
-                                #programming
-                            </a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="#">
-                                #sea
-                            </a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a href="#">
-                                #property
-                            </a>
-                        </li>
+                        @endforeach
+
                     </ul>
                 </div>
                 <!-- end tags-->
+
                 <!-- authors-->
                 <!-- Profile author -->
                 <div class="wrap__profile">
@@ -184,9 +180,11 @@
                     </div>
                 </div>
                 <!-- end author-->
+
                 <!-- Comment  -->
                 <div id="comments" class="comments-area">
                     <h3 class="comments-title">2 Comments:</h3>
+
                     <ol class="comment-list">
                         <li class="comment">
                             <aside class="comment-body">
@@ -196,18 +194,21 @@
                                         <b class="fn">Sinmun</b>
                                         <span class="says">says:</span>
                                     </div>
+
                                     <div class="comment-metadata">
                                         <a href="#">
                                             <span>April 24, 2019 at 10:59 am</span>
                                         </a>
                                     </div>
                                 </div>
+
                                 <div class="comment-content">
                                     <p>Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s,
                                         when an unknown
                                         printer took a galley of type and scrambled it to make a type specimen book.
                                     </p>
                                 </div>
+
                                 <div class="reply">
                                     <a href="#" class="comment-reply-link" data-toggle="modal"
                                         data-target="#exampleModal">Reply</a>
@@ -216,6 +217,7 @@
                                     </span>
                                 </div>
                             </aside>
+
                             <ol class="children">
                                 <li class="comment">
                                     <aside class="comment-body">
@@ -225,18 +227,21 @@
                                                 <b class="fn">Sinmun</b>
                                                 <span class="says">says:</span>
                                             </div>
+
                                             <div class="comment-metadata">
                                                 <a href="#">
                                                     <span>April 24, 2019 at 10:59 am</span>
                                                 </a>
                                             </div>
                                         </div>
+
                                         <div class="comment-content">
                                             <p>Lorem Ipsum has been the industry’s standard dummy text ever since
                                                 the 1500s, when an
                                                 unknown printer took a galley of type and scrambled it to make a
                                                 type specimen book.</p>
                                         </div>
+
                                         <div class="reply">
                                             <a href="#" class="comment-reply-link" data-toggle="modal"
                                                 data-target="#exampleModal">Reply</a>
@@ -248,6 +253,7 @@
                                 </li>
                             </ol>
                         </li>
+
                         <li class="comment">
                             <aside class="comment-body">
                                 <div class="comment-meta">
@@ -256,18 +262,21 @@
                                         <b class="fn">Sinmun</b>
                                         <span class="says">says:</span>
                                     </div>
+
                                     <div class="comment-metadata">
                                         <a href="#">
                                             <span>April 24, 2019 at 10:59 am</span>
                                         </a>
                                     </div>
                                 </div>
+
                                 <div class="comment-content">
                                     <p>Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s,
                                         when an unknown
                                         printer took a galley of type and scrambled it to make a type specimen book.
                                     </p>
                                 </div>
+
                                 <div class="reply">
                                     <a href="#" class="comment-reply-link" data-toggle="modal"
                                         data-target="#exampleModal">Reply</a>
@@ -278,8 +287,10 @@
                             </aside>
                         </li>
                     </ol>
+
                     <div class="comment-respond">
                         <h3 class="comment-reply-title">Leave a Reply</h3>
+
                         <form class="comment-form">
                             <p class="comment-notes">
                                 <span id="email-notes">Your email address will not be published.</span>
@@ -338,7 +349,11 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- end comment -->
+
+
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="single_navigation-prev">
@@ -357,16 +372,21 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="small_add_banner mb-5 pb-4">
                     <div class="small_add_banner_img">
                         <img src="images/placeholder_large.jpg" alt="adds">
                     </div>
                 </div>
+
+
                 <div class="clearfix"></div>
+
                 <div class="related-article">
                     <h4>
                         you may also like
                     </h4>
+
                     <div class="article__entry-carousel-three">
                         <div class="item">
                             <!-- Post Article -->
@@ -388,12 +408,14 @@
                                                 descember 09, 2016
                                             </span>
                                         </li>
+
                                     </ul>
                                     <h5>
                                         <a href="#">
                                             Maecenas accumsan tortor ut velit pharetra mollis.
                                         </a>
                                     </h5>
+
                                 </div>
                             </div>
                         </div>
@@ -417,12 +439,14 @@
                                                 descember 09, 2016
                                             </span>
                                         </li>
+
                                     </ul>
                                     <h5>
                                         <a href="#">
                                             Maecenas accumsan tortor ut velit pharetra mollis.
                                         </a>
                                     </h5>
+
                                 </div>
                             </div>
                         </div>
@@ -446,12 +470,14 @@
                                                 descember 09, 2016
                                             </span>
                                         </li>
+
                                     </ul>
                                     <h5>
                                         <a href="#">
                                             Maecenas accumsan tortor ut velit pharetra mollis.
                                         </a>
                                     </h5>
+
                                 </div>
                             </div>
                         </div>
@@ -475,12 +501,14 @@
                                                 descember 09, 2016
                                             </span>
                                         </li>
+
                                     </ul>
                                     <h5>
                                         <a href="#">
                                             Maecenas accumsan tortor ut velit pharetra mollis.
                                         </a>
                                     </h5>
+
                                 </div>
                             </div>
                         </div>
@@ -504,17 +532,20 @@
                                                 descember 09, 2016
                                             </span>
                                         </li>
+
                                     </ul>
                                     <h5>
                                         <a href="#">
                                             Maecenas accumsan tortor ut velit pharetra mollis.
                                         </a>
                                     </h5>
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
             <div class="col-md-4">
                 <div class="sticky-top">
@@ -537,34 +568,41 @@
                             </div>
                         </div>
                         <div class="wrapper__list__article-small">
+                            @foreach ($recentNews as $news)
+                            @if ($loop->index <= 2)
                             <div class="mb-3">
                                 <!-- Post Article -->
                                 <div class="card__post card__post-list">
                                     <div class="image-sm">
-                                        <a href="./blog_details.html">
-                                            <img src="images/newsimage1.png" class="img-fluid" alt="">
+                                        <a href="{{ route('news-details', $news->slug) }}">
+                                            <img src="{{ asset($news->image) }}" class="img-fluid" alt="">
                                         </a>
                                     </div>
+
+
                                     <div class="card__post__body ">
                                         <div class="card__post__content">
+
                                             <div class="card__post__author-info mb-2">
                                                 <ul class="list-inline">
                                                     <li class="list-inline-item">
                                                         <span class="text-primary">
-                                                            by david hall
+                                                            {{ __('by') }} {{ $news->auther->name }}
                                                         </span>
                                                     </li>
                                                     <li class="list-inline-item">
                                                         <span class="text-dark text-capitalize">
-                                                            descember 09, 2016
+
+                                                            {{ date('M d, Y', strtotime($news->created_at)) }}
                                                         </span>
                                                     </li>
+
                                                 </ul>
                                             </div>
                                             <div class="card__post__title">
                                                 <h6>
-                                                    <a href="./blog_details.html">
-                                                        6 Best Tips for Building a Good Shipping Boat
+                                                    <a href="{{ route('news-details', $news->slug) }}">
+                                                        {!! truncate($news->title) !!}
                                                     </a>
                                                 </h6>
                                             </div>
@@ -572,114 +610,52 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <!-- Post Article -->
-                                <div class="card__post card__post-list">
-                                    <div class="image-sm">
-                                        <a href="./blog_details.html">
-                                            <img src="images/news2.jpg" class="img-fluid" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="card__post__body ">
-                                        <div class="card__post__content">
-                                            <div class="card__post__author-info mb-2">
-                                                <ul class="list-inline">
-                                                    <li class="list-inline-item">
-                                                        <span class="text-primary">
-                                                            by david hall
-                                                        </span>
-                                                    </li>
-                                                    <li class="list-inline-item">
-                                                        <span class="text-dark text-capitalize">
-                                                            descember 09, 2016
-                                                        </span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="card__post__title">
-                                                <h6>
-                                                    <a href="./blog_details.html">
-                                                        6 Best Tips for Building a Good Shipping Boat
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <!-- Post Article -->
-                                <div class="card__post card__post-list">
-                                    <div class="image-sm">
-                                        <a href="./blog_details.html">
-                                            <img src="images/news3.jpg" class="img-fluid" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="card__post__body ">
-                                        <div class="card__post__content">
-                                            <div class="card__post__author-info mb-2">
-                                                <ul class="list-inline">
-                                                    <li class="list-inline-item">
-                                                        <span class="text-primary">
-                                                            by david hall
-                                                        </span>
-                                                    </li>
-                                                    <li class="list-inline-item">
-                                                        <span class="text-dark text-capitalize">
-                                                            descember 09, 2016
-                                                        </span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="card__post__title">
-                                                <h6>
-                                                    <a href="./blog_details.html">
-                                                        6 Best Tips for Building a Good Shipping Boat
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @endif
+
+                            @if ($loop->index === 3)
+
                             <!-- Post Article -->
                             <div class="article__entry">
                                 <div class="article__image">
-                                    <a href="#">
-                                        <img src="images/news4.jpg" alt="" class="img-fluid">
+                                    <a href="{{ route('news-details', $news->slug) }}">
+                                        <img  src="{{ asset($news->image) }}" alt="" class="img-fluid">
                                     </a>
                                 </div>
                                 <div class="article__content">
                                     <div class="article__category">
-                                        travel
+                                        {{ $news->category->name }}
                                     </div>
                                     <ul class="list-inline">
                                         <li class="list-inline-item">
                                             <span class="text-primary">
-                                                by david hall
+                                                {{ __('by') }} {{ $news->auther->name }}
                                             </span>
                                         </li>
                                         <li class="list-inline-item">
                                             <span class="text-dark text-capitalize">
-                                                descember 09, 2016
+                                                {{ date('M d, Y', strtotime($news->created_at)) }}
                                             </span>
                                         </li>
+
                                     </ul>
                                     <h5>
-                                        <a href="#">
-                                            Proin eu nisl et arcu iaculis placerat sollicitudin ut est
+                                        <a href="{{ route('news-details', $news->slug) }}">
+                                            {!! truncate($news->title) !!}
                                         </a>
                                     </h5>
                                     <p>
-                                        Maecenas accumsan tortor ut velit pharetra mollis. Proin eu nisl et arcu
-                                        iaculis placerat sollicitudin ut
-                                        est. In fringilla dui dui.
+                                       {!! truncate($news->content, 160) !!}
                                     </p>
-                                    <a href="#" class="btn btn-outline-primary mb-4 text-capitalize"> read more</a>
+                                    <a href="{{ route('news-details', $news->slug) }}" class="btn btn-outline-primary mb-4 text-capitalize"> {{ __('read more') }}</a>
                                 </div>
                             </div>
+                            @endif
+                            @endforeach
+
+
                         </div>
                     </aside>
+
                     <!-- social media -->
                     <aside class="wrapper__list__article">
                         <h4 class="border_section">stay conected</h4>
@@ -724,13 +700,16 @@
                                     </span>
                                 </div>
                             </a>
+
                         </div>
                     </aside>
                     <!-- End social media -->
+
                     <aside class="wrapper__list__article">
                         <h4 class="border_section">tags</h4>
                         <div class="blog-tags p-0">
                             <ul class="list-inline">
+
                                 <li class="list-inline-item">
                                     <a href="#">
                                         #property
@@ -806,9 +785,11 @@
                                         #framework
                                     </a>
                                 </li>
+
                             </ul>
                         </div>
                     </aside>
+
                     <aside class="wrapper__list__article">
                         <h4 class="border_section">newsletter</h4>
                         <!-- Form Subscribe -->
@@ -825,6 +806,7 @@
                             </div>
                         </div>
                     </aside>
+
                     <aside class="wrapper__list__article">
                         <h4 class="border_section">Advertise</h4>
                         <a href="#">
@@ -833,6 +815,7 @@
                             </figure>
                         </a>
                     </aside>
+
                 </div>
             </div>
         </div>
