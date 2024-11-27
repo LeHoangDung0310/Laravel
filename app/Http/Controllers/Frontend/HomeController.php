@@ -52,7 +52,7 @@ class HomeController extends Controller
         $categorySectionFour = News::where('category_id', $HomeSectionSetting->category_section_four)
             ->activeEntries()->withLocalize()
             ->orderBy('id', 'DESC')
-            ->take(4)
+            ->take(0)
             ->get();
 
         $mostViewedPosts = News::activeEntries()->withLocalize()
