@@ -30,8 +30,8 @@ class NewsController extends Controller
      */
     public function fetchCategory(Request $request)
     {
-        $categories = Category::where('language', $request->lang)->get();
-        return $categories;
+       $categories = Category::where('language', $request->lang)->get();
+       return $categories;
     }
 
     /**
@@ -70,7 +70,7 @@ class NewsController extends Controller
         $tags = explode(',', $request->tags);
         $tagIds = [];
 
-        foreach ($tags as $tag) {
+        foreach($tags as $tag){
             $item = new Tag();
             $item->name = $tag;
             $item->language = $news->language;
@@ -85,6 +85,7 @@ class NewsController extends Controller
         toast(__('Created Successfully!'), 'success')->width('330');
 
         return redirect()->route('admin.news.index');
+
     }
 
     /**
@@ -119,9 +120,9 @@ class NewsController extends Controller
      * Update the specified resource in storage.
      */
     public function update(AdminNewsUpdateRequest $request, string $id)
-    {
+{
 
-        $news = News::findOrFail($id);
+    $news = News::findOrFail($id);
 
         /** Handle image */
         $imagePath = $this->handleFileUpload($request, 'image');
@@ -149,7 +150,7 @@ class NewsController extends Controller
         /** detach tags form pivot table */
         $news->tags()->detach($news->tags);
 
-        foreach ($tags as $tag) {
+        foreach($tags as $tag){
             $item = new Tag();
             $item->name = $tag;
             $item->language = $news->language;
@@ -164,6 +165,7 @@ class NewsController extends Controller
         toast(__('Update Successfully!'), 'success')->width('330');
 
         return redirect()->route('admin.news.index');
+
     }
 
     /**
