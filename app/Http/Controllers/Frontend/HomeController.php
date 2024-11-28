@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\HomeSectionSetting;
 use App\Models\News;
+use App\Models\SocialCount;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,13 +53,15 @@ class HomeController extends Controller
         $categorySectionFour = News::where('category_id', $HomeSectionSetting->category_section_four)
             ->activeEntries()->withLocalize()
             ->orderBy('id', 'DESC')
-            ->take(0)
+            ->take(4)
             ->get();
 
         $mostViewedPosts = News::activeEntries()->withLocalize()
             ->orderBy('views', 'DESC')
             ->take(3)
             ->get();
+
+        $socialCounts = SocialCount::where(['status' => 1, 'language' => getLangauge()])->get();
 
 
 
@@ -71,7 +74,8 @@ class HomeController extends Controller
             'categorySectionTwo',
             'categorySectionThree',
             'categorySectionFour',
-            'mostViewedPosts'
+            'mostViewedPosts',
+            'socialCounts'
         ));
     }
 
