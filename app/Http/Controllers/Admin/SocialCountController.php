@@ -21,8 +21,9 @@ class SocialCountController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        //
+    {   
+        $languages = Language::all();
+        return view('admin.social-count.create', compact('languages'));
     }
 
     /**
