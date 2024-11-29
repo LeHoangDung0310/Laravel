@@ -22,5 +22,14 @@ class FooterInfoSeeder extends Seeder
             ]
         );
 
+        FooterInfo::updateOrCreate(
+            ['language' => 'vi'],
+            [
+                'logo' => '/test',
+                'description' => 'test',
+                'copyright' => 'test',
+            ]
+        );
+
     }
 }
