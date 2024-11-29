@@ -61,6 +61,8 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
+        
+
         $socialCounts = SocialCount::where(['status' => 1, 'language' => getLangauge()])->get();
 
         $mostCommonTags = $this->mostCommonTags();
@@ -124,7 +126,7 @@ class HomeController extends Controller
                     ->orWhere('content', 'like','%'.$request->search.'%');
             })->orWhereHas('category', function($query) use ($request){
                 $query->where('name', 'like','%'.$request->search.'%');
-            })->get();
+            })->activeEntries()->withLocalize()->get();
         }
        
         return view('frontend.news', compact('news'));
