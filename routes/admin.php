@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdController;
 use App\Http\Controllers\Admin\AdminAuthenticationController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -11,7 +12,7 @@ use App\Http\Controllers\Admin\SocialCountController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], function(){
 
     Route::get('login', [AdminAuthenticationController::class, 'login'])->name('login');
     Route::post('login', [AdminAuthenticationController::class, 'handleLogin'])->name('handle-login');
@@ -23,12 +24,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::get('reset-password/{token}', [AdminAuthenticationController::class, 'resetPassword'])->name('reset-password');
     Route::post('reset-password', [AdminAuthenticationController::class, 'handleResetPassword'])->name('reset-password.send');
+
+
 });
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']], function(){
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     /**Profile Routes */
-    Route::put('profile-password-update/{id}', [ProfileController::class, 'passwordUpdate'])->name('profile-password.update');
+    Route::put('profile-password-update/{id}', [ ProfileController::class, 'passwordUpdate'])->name('profile-password.update');
     Route::resource('profile', ProfileController::class);
 
     /** Language Route */
@@ -43,12 +46,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
     Route::get('news-copy/{id}', [NewsController::class, 'copyNews'])->name('news-copy');
     Route::resource('news', NewsController::class);
 
+    /** Home Section Setting Route */
+    Route::get('home-section-setting', [HomeSectionSettingController::class, 'index'])->name('home-section-setting.index');
+    Route::put('home-section-setting', [HomeSectionSettingController::class, 'update'])->name('home-section-setting.update');
 
-     /** Home Section Setting Route */
-     Route::get('home-section-setting', [HomeSectionSettingController::class, 'index'])->name('home-section-setting.index');
-     Route::put('home-section-setting', [HomeSectionSettingController::class, 'update'])->name('home-section-setting.update');
+    /** Social Count Route */
+    Route::resource('social-count', SocialCountController::class);
 
-     /** Social Count Route */
-     Route::resource('social-count', SocialCountController::class);
+    /** Ad Route */
+    Route::resource('ad', AdController::class);
 
 });
