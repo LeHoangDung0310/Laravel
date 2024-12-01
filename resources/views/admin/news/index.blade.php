@@ -30,10 +30,20 @@
                 <div class="tab-content tab-bordered" id="myTab3Content">
                     @foreach ($languages as $language)
                         @php
-                            $news = \App\Models\News::with('category')
+                            if(canAccess(['news all-access'])){
+                                $news = \App\Models\News::with('category')
                                 ->where('language', $language->lang)
+                                ->where('is_approved', 1)
                                 ->orderBy('id', 'DESC')
                                 ->get();
+                            }else {
+                                $news = \App\Models\News::with('category')
+                                ->where('language', $language->lang)
+                                ->where('is_approved', 1)
+                                ->where('auther_id', auth()->guard('admin')->user()->id)
+                                ->orderBy('id', 'DESC')
+                                ->get();
+                            }
                         @endphp
                         <div class="tab-pane fade show {{ $loop->index === 0 ? 'active' : '' }}"
                             id="home-{{ $language->lang }}" role="tabpanel" aria-labelledby="home-tab2">
@@ -48,9 +58,11 @@
                                                 <th>{{ __('Image') }}</th>
                                                 <th>{{ __('Title') }}</th>
                                                 <th>{{ __('Category') }}</th>
+                                                @if (canAccess(['news status', 'news all-access']))
                                                 <th>{{ __('In Breaking') }}</th>
                                                 <th>{{ __('In Slider') }}</th>
                                                 <th>{{ __('In Popular') }}</th>
+                                                @endif
                                                 <th>{{ __('Status') }}</th>
                                                 <th>{{ __('Action') }}</th>
                                             </tr>
@@ -59,49 +71,46 @@
                                             @foreach ($news as $item)
                                                 <tr>
                                                     <td>{{ $item->id }}</td>
-                                                    <td>
+                                                    <td >
                                                         <img src="{{ asset($item->image) }}" width="100" alt="">
                                                     </td>
 
                                                     <td>{{ $item->title }}</td>
                                                     <td>{{ $item->category->name }}</td>
+                                                    @if (canAccess(['news status', 'news all-access']))
+                                                        <td>
+                                                            <label class="custom-switch mt-2">
+                                                                <input {{ $item->is_breaking_news === 1 ? 'checked' : '' }}
+                                                                    data-id="{{ $item->id }}" data-name="is_breaking_news"
+                                                                    value="1" type="checkbox" class="custom-switch-input toggle-status">
+                                                                <span class="custom-switch-indicator"></span>
+                                                            </label>
+                                                        </td>
 
-                                                    <td>
-                                                        <label class="custom-switch mt-2">
-                                                            <input {{ $item->is_breaking_news === 1 ? 'checked' : '' }}
-                                                                data-id="{{ $item->id }}" data-name="is_breaking_news"
-                                                                value="1" type="checkbox"
-                                                                class="custom-switch-input toggle-status">
-                                                            <span class="custom-switch-indicator"></span>
-                                                        </label>
-                                                    </td>
+                                                        <td>
+                                                            <label class="custom-switch mt-2">
+                                                                <input {{ $item->show_at_slider === 1 ? 'checked' : '' }}
+                                                                    data-id="{{ $item->id }}" data-name="show_at_slider"
+                                                                    value="1" type="checkbox" class="custom-switch-input toggle-status">
+                                                                <span class="custom-switch-indicator"></span>
+                                                            </label>
+                                                        </td>
 
-                                                    <td>
-                                                        <label class="custom-switch mt-2">
-                                                            <input {{ $item->show_at_slider === 1 ? 'checked' : '' }}
-                                                                data-id="{{ $item->id }}" data-name="show_at_slider"
-                                                                value="1" type="checkbox"
-                                                                class="custom-switch-input toggle-status">
-                                                            <span class="custom-switch-indicator"></span>
-                                                        </label>
-                                                    </td>
-
-                                                    <td>
-                                                        <label class="custom-switch mt-2">
-                                                            <input {{ $item->show_at_popular === 1 ? 'checked' : '' }}
-                                                                data-id="{{ $item->id }}" data-name="show_at_popular"
-                                                                value="1" type="checkbox"
-                                                                class="custom-switch-input toggle-status">
-                                                            <span class="custom-switch-indicator"></span>
-                                                        </label>
-                                                    </td>
+                                                        <td>
+                                                            <label class="custom-switch mt-2">
+                                                                <input {{ $item->show_at_popular === 1 ? 'checked' : '' }}
+                                                                    data-id="{{ $item->id }}" data-name="show_at_popular"
+                                                                    value="1" type="checkbox" class="custom-switch-input toggle-status">
+                                                                <span class="custom-switch-indicator"></span>
+                                                            </label>
+                                                        </td>
+                                                    @endif
 
                                                     <td>
                                                         <label class="custom-switch mt-2">
                                                             <input {{ $item->status === 1 ? 'checked' : '' }}
                                                                 data-id="{{ $item->id }}" data-name="status"
-                                                                value="1" type="checkbox"
-                                                                class="custom-switch-input toggle-status">
+                                                                value="1" type="checkbox" class="custom-switch-input toggle-status">
                                                             <span class="custom-switch-indicator"></span>
                                                         </label>
                                                     </td>
@@ -139,18 +148,20 @@
     <script>
         @foreach ($languages as $language)
             $("#table-{{ $language->lang }}").dataTable({
-                "columnDefs": [{
-                    "sortable": false,
-                    "targets": [2, 3]
-                }],
+                "columnDefs": [
+                    {
+                        "sortable": false,
+                        "targets": [2, 3]
+                    }
+                ],
                 "order": [
                     [0, 'desc']
                 ]
             });
         @endforeach
 
-        $(document).ready(function() {
-            $('.toggle-status').on('click', function() {
+        $(document).ready(function(){
+            $('.toggle-status').on('click', function(){
                 let id = $(this).data('id');
                 let name = $(this).data('name');
                 let status = $(this).prop('checked') ? 1 : 0;
@@ -159,19 +170,19 @@
                     method: 'GET',
                     url: "{{ route('admin.toggle-news-status') }}",
                     data: {
-                        id: id,
-                        name: name,
-                        status: status
+                        id:id,
+                        name:name,
+                        status:status
                     },
-                    success: function(data) {
-                        if (data.status === 'success') {
+                    success: function(data){
+                        if(data.status === 'success'){
                             Toast.fire({
                                 icon: 'success',
                                 title: data.message
                             })
                         }
                     },
-                    error: function(error) {
+                    error: function(error){
                         console.log(error);
                     }
                 })
