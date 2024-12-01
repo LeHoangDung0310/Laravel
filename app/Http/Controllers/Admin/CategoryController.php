@@ -12,6 +12,16 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(['permission:category index,admin'])->only('index');
+        $this->middleware(['permission:category create,admin'])->only(['create', 'store']);
+        $this->middleware(['permission:category update,admin'])->only(['edit', 'update']);
+        $this->middleware(['permission:category delete,admin'])->only(['edit', 'destroy']);
+
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -43,7 +53,7 @@ class CategoryController extends Controller
         $category->status = $request->status;
         $category->save();
 
-        toast(__('Created Successfully'), 'success')->width('350');
+        toast(__('Created Successfully'),'success')->width('350');
 
         return redirect()->route('admin.category.index');
     }
@@ -79,7 +89,7 @@ class CategoryController extends Controller
         $category->status = $request->status;
         $category->save();
 
-        toast(__('Update Successfully'), 'success')->width('350');
+        toast(__('Update Successfully'),'success')->width('350');
 
         return redirect()->route('admin.category.index');
     }
@@ -89,12 +99,12 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        try {
+       try {
             $category = Category::findOrFail($id);
             $category->delete();
             return response(['status' => 'success', 'message' => __('Deleted Successfully!')]);
-        } catch (\Throwable $th) {
+       } catch (\Throwable $th) {
             return response(['status' => 'error', 'message' => __('Someting went wrong!')]);
-        }
+       }
     }
 }
