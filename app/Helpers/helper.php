@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Language;
+use PhpParser\Node\Expr\Cast\String_;
 
 /** format news tags */
 
@@ -36,13 +37,13 @@ function setLanguage(string $code): void
 
 /** Truncate text */
 
-function truncate(string $text, int $limit = 45): String
+function truncate(string $text, int $limit = 50): String
 {
     return \Str::limit($text, $limit, '...');
 }
 
-
 /** Convert a number in K format */
+
 function convertToKFormat(int $number): String
 {
     if($number < 1000){
@@ -52,4 +53,16 @@ function convertToKFormat(int $number): String
     }else {
         return round($number / 1000000, 1). 'M';
     }
+}
+
+/** Make Sidebar Active */
+
+function setSidebarActive(array $routes): ?string
+{
+    foreach($routes as $route){
+        if(request()->routeIs($route)){
+            return 'active';
+        }
+    }
+    return '';
 }
