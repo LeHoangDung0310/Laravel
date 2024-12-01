@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Language;
+use App\Models\Setting;
 use PhpParser\Node\Expr\Cast\String_;
 
 /** format news tags */
@@ -65,4 +66,26 @@ function setSidebarActive(array $routes): ?string
         }
     }
     return '';
+}
+
+/** get Setting */
+
+function getSetting($key){
+    $data = Setting::where('key', $key)->first();
+    return $data->value;
+}
+
+/** check permission */
+
+function canAccess(array $permissions){
+
+   $permission = auth()->guard('admin')->user()->hasAnyPermission($permissions);
+   $superAdmin = auth()->guard('admin')->user()->hasRole('Super Admin');
+
+   if($permission || $superAdmin){
+    return true;
+   }else {
+    return false;
+   }
+
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\AdController;
 use App\Http\Controllers\Admin\AdminAuthenticationController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ContactMessageController;
@@ -15,6 +16,8 @@ use App\Http\Controllers\Admin\HomeSectionSettingController;
 use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\RolePermisionController;
+use App\Http\Controllers\Admin\RoleUserController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SocialCountController;
 use App\Http\Controllers\Admin\SocialLinkController;
@@ -108,6 +111,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
     Route::put('seo-setting', [SettingController::class, 'updateSeoSetting'])->name('seo-setting.update');
     Route::put('appearance-setting', [SettingController::class, 'updateAppearanceSetting'])->name('appearance-setting.update');
 
+    /** Role and Permissions Routes */
+    Route::get('role', [RolePermisionController::class, 'index'])->name('role.index');
+    Route::get('role/create', [RolePermisionController::class, 'create'])->name('role.create');
+    Route::post('role/create', [RolePermisionController::class, 'store'])->name('role.store');
+    Route::get('role/{id}/edit', [RolePermisionController::class, 'edit'])->name('role.edit');
+    Route::put('role/{id}/edit', [RolePermisionController::class, 'update'])->name('role.update');
+    Route::delete('role/{id}/destory', [RolePermisionController::class, 'destory'])->name('role.destory');
+
+    /** Admin User Routes */
+    Route::resource('role-users', RoleUserController::class);
 
 });
 

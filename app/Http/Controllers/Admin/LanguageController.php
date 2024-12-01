@@ -10,6 +10,13 @@ use Illuminate\Http\Request;
 
 class LanguageController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:languages index,admin'])->only(['index']);
+        $this->middleware(['permission:languages create,admin'])->only(['create']);
+        $this->middleware(['permission:languages update,admin'])->only(['update']);
+        $this->middleware(['permission:languages delete,admin'])->only(['destroy']);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -40,18 +47,11 @@ class LanguageController extends Controller
         $language->status = $request->status;
         $language->save();
 
-        toast(__('Created Successfully'), 'success')->width('350');
+        toast(__('Created Successfully'),'success')->width('350');
 
         return redirect()->route('admin.language.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -75,7 +75,7 @@ class LanguageController extends Controller
         $language->status = $request->status;
         $language->save();
 
-        toast(__('Updated Successfully'), 'success')->width('350');
+        toast(__('Updated Successfully'),'success')->width('350');
 
         return redirect()->route('admin.language.index');
     }
@@ -87,13 +87,13 @@ class LanguageController extends Controller
     {
         try {
             $language = Language::findOrFail($id);
-            if ($language->lang === 'en' || $language->lang === 'vi') {
-                return response(['status' => 'error', 'message' => __('Cannot delete this language!')]);
+            if($language->lang === 'en'){
+                return response(['status' => 'error', 'message' => __('Can\'t Delete This One!')]);
             }
             $language->delete();
             return response(['status' => 'success', 'message' => __('Deleted Successfully!')]);
         } catch (\Throwable $th) {
-            return response(['status' => 'error', 'message' => __('Something went wrong!')]);
+            return response(['status' => 'error', 'message' => __('something went wrong!')]);
         }
     }
 }
