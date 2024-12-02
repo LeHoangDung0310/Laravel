@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\FooterGridTwoController;
 use App\Http\Controllers\Admin\FooterInfoController;
 use App\Http\Controllers\Admin\HomeSectionSettingController;
 use App\Http\Controllers\Admin\LanguageController;
+use App\Http\Controllers\Admin\LocalizationController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RolePermisionController;
@@ -124,6 +125,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
 
     /** Admin User Routes */
     Route::resource('role-users', RoleUserController::class);
+
+    /** Localization Routes */
+    Route::get('admin-localization', [LocalizationController::class, 'adminIndex'])->name('admin-localization.index');
+    Route::get('frontend-localization', [LocalizationController::class, 'frontnedIndex'])->name('frontend-localization.index');
+
+    Route::post('extract-localize-string', [LocalizationController::class, 'extractLocalizationStrings'])->name('extract-localize-string');
+
+    Route::post('update-lang-string', [LocalizationController::class, 'updateLangString'])->name('update-lang-string');
+
+
+    Route::post('translate-string', [LocalizationController::class, 'translateString'])->name('translate-string');
 
 });
 
