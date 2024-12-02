@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'Home' => 'Trang chủ',
+  'Home' => 'Home',
   'About' => 'About',
   'Contact' => 'Contact',
   'contact us' => 'contact us',
