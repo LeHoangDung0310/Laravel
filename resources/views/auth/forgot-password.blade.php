@@ -11,7 +11,7 @@
                             @if (session()->has('status'))
                                 <div class="alert alert-success">{{ session('status') }}</div>
                             @endif
-                            <h4 class="card-title mb-4">{{ __('Forget Password') }}</h4>
+                            <h4 class="card-title mb-4">{{ __('frontend.Forget Password') }}</h4>
                             <form method="POST" action="{{ route('password.email') }}">
                                 @csrf
 
@@ -32,7 +32,7 @@
                     </div>
 
                     <p class="text-center mt-4 mb-0">{{ __('frontend.Remembered your password?') }} <a
-                            href="{{ route('login') }}">{{ __('Login') }}</a></p>
+                            href="{{ route('login') }}">{{ __('frontend.Login') }}</a></p>
                 </div>
             </div>
         </div>

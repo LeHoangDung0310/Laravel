@@ -39,7 +39,7 @@
                                             <form method="POST" action="{{ route('admin.extract-localize-string') }}">
                                                 @csrf
                                                 <input type="hidden" name="directory"
-                                                    value="{{ resource_path('views/frontend') }},{{ app_path('Http/Controllers/Frontend') }},{{ resource_path('views/mail') }}">
+                                                    value="{{ resource_path('views/frontend') }},{{ app_path('Http/Controllers/Frontend') }},{{ resource_path('views/mail') }},{{ resource_path('views/auth') }}">
                                                 <input type="hidden" name="language_code" value="{{ $language->lang }}">
                                                 <input type="hidden" name="file_name" value="frontend">
 
@@ -51,7 +51,7 @@
                                                 action="{{ route('admin.translate-string') }}">
                                                 <input type="hidden" name="language_code" value="{{ $language->lang }}">
                                                 <input type="hidden" name="file_name" value="frontend">
-                                                <button  type="submit"
+                                                <button type="submit"
                                                     class="btn btn-dark mx-3 translate-button">{{ __('admin.Translate Strings') }}</button>
                                             </form>
 
@@ -192,7 +192,7 @@
                     method: 'POST',
                     url: "{{ route('admin.translate-string') }}",
                     data: formData,
-                    beforeSend: function(){
+                    beforeSend: function() {
                         $('.translate-button').text("Translating Please Wait...")
                         $('.translate-button').prop('disabled', true);
                     },
