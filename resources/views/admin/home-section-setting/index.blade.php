@@ -29,10 +29,7 @@
                             $categories = \App\Models\Category::where('language', $language->lang)
                                 ->orderByDesc('id')
                                 ->get();
-                            $homeSectionSetting = \App\Models\HomeSectionSetting::where(
-                                'language',
-                                $language->lang,
-                            )->first();
+                            $homeSectionSetting = \App\Models\HomeSectionSetting::where('language', $language->lang)->first();
 
                         @endphp
                         <div class="tab-pane fade show {{ $loop->index === 0 ? 'active' : '' }}"
@@ -47,9 +44,7 @@
                                         <select name="category_section_one" id="" class="form-control select2">
                                             <option value="">---{{ __('admin.Select') }}---</option>
                                             @foreach ($categories as $category)
-                                                <option
-                                                    {{ $homeSectionSetting->category_section_one == $category->id ? 'selected' : '' }}
-                                                    value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option {{ @$homeSectionSetting->category_section_one == $category->id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         </select>
 
@@ -60,9 +55,7 @@
                                         <select name="category_section_two" id="" class="form-control select2">
                                             <option value="">---{{ __('admin.Select') }}---</option>
                                             @foreach ($categories as $category)
-                                                <option
-                                                    {{ $homeSectionSetting->category_section_two == $category->id ? 'selected' : '' }}
-                                                    value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option {{ @$homeSectionSetting->category_section_two == $category->id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         </select>
 
@@ -73,9 +66,7 @@
                                         <select name="category_section_three" id="" class="form-control select2">
                                             <option value="">---{{ __('admin.Select') }}---</option>
                                             @foreach ($categories as $category)
-                                                <option
-                                                    {{ $homeSectionSetting->category_section_three == $category->id ? 'selected' : '' }}
-                                                    value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option {{ @$homeSectionSetting->category_section_three == $category->id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         </select>
 
@@ -86,9 +77,7 @@
                                         <select name="category_section_four" id="" class="form-control select2">
                                             <option value="">---{{ __('admin.Select') }}---</option>
                                             @foreach ($categories as $category)
-                                                <option
-                                                    {{ $homeSectionSetting->category_section_four == $category->id ? 'selected' : '' }}
-                                                    value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option {{ @$homeSectionSetting->category_section_four == $category->id ? 'selected' : '' }} value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         </select>
 
@@ -108,14 +97,14 @@
 @endsection
 
 @push('scripts')
-    <script>
-        @if ($errors->any())
-            @foreach ($errors->all() as $error)
-                Toast.fire({
-                    icon: 'error',
-                    title: "{{ $error }}"
-                });
-            @endforeach
-        @endif
-    </script>
+<script>
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            Toast.fire({
+                icon: 'error',
+                title: "{{ $error }}"
+            });
+        @endforeach
+    @endif
+</script>
 @endpush
