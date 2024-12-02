@@ -3,12 +3,12 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h1>{{ __('Home Section Setting') }}</h1>
+            <h1>{{ __('admin.Home Section Setting') }}</h1>
         </div>
 
         <div class="card card-primary">
             <div class="card-header">
-                <h4>{{ __('Home Section Setting') }}</h4>
+                <h4>{{ __('admin.Home Section Setting') }}</h4>
 
             </div>
 
@@ -42,10 +42,10 @@
                                     @csrf
                                     @method('PUT')
                                     <div class="form-group">
-                                        <label for="">{{ __('Category Section one') }}</label>
+                                        <label for="">{{ __('admin.Category Section one') }}</label>
                                         <input type="hidden" name="language" value="{{ $language->lang }}">
                                         <select name="category_section_one" id="" class="form-control select2">
-                                            <option value="">---{{ __('Select') }}---</option>
+                                            <option value="">---{{ __('admin.Select') }}---</option>
                                             @foreach ($categories as $category)
                                                 <option
                                                     {{ $homeSectionSetting->category_section_one == $category->id ? 'selected' : '' }}
@@ -56,9 +56,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="">{{ __('Category Section Two') }}</label>
+                                        <label for="">{{ __('admin.Category Section Two') }}</label>
                                         <select name="category_section_two" id="" class="form-control select2">
-                                            <option value="">---{{ __('Select') }}---</option>
+                                            <option value="">---{{ __('admin.Select') }}---</option>
                                             @foreach ($categories as $category)
                                                 <option
                                                     {{ $homeSectionSetting->category_section_two == $category->id ? 'selected' : '' }}
@@ -69,9 +69,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="">{{ __('Category Section Three') }}</label>
+                                        <label for="">{{ __('admin.Category Section Three') }}</label>
                                         <select name="category_section_three" id="" class="form-control select2">
-                                            <option value="">---{{ __('Select') }}---</option>
+                                            <option value="">---{{ __('admin.Select') }}---</option>
                                             @foreach ($categories as $category)
                                                 <option
                                                     {{ $homeSectionSetting->category_section_three == $category->id ? 'selected' : '' }}
@@ -82,9 +82,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="">{{ __('Category Section Four') }}</label>
+                                        <label for="">{{ __('admin.Category Section Four') }}</label>
                                         <select name="category_section_four" id="" class="form-control select2">
-                                            <option value="">---{{ __('Select') }}---</option>
+                                            <option value="">---{{ __('admin.Select') }}---</option>
                                             @foreach ($categories as $category)
                                                 <option
                                                     {{ $homeSectionSetting->category_section_four == $category->id ? 'selected' : '' }}
@@ -93,7 +93,7 @@
                                         </select>
 
                                     </div>
-                                    <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
+                                    <button type="submit" class="btn btn-primary">{{ __('admin.Save') }}</button>
                                 </form>
                             </div>
                         </div>
