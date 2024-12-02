@@ -3,12 +3,12 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h1>{{ __('Categories') }}</h1>
+            <h1>{{ __('Frontend Localization') }}</h1>
         </div>
 
         <div class="card card-primary">
             <div class="card-header">
-                <h4>{{ __('All Categories') }}</h4>
+                <h4>{{ __('All Strings') }}</h4>
                 <div class="card-header-action">
                     <a href="{{ route('admin.category.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> {{ __('Create new') }}
@@ -37,7 +37,15 @@
                                 <div class="card">
                                  <div class="card-body">
                                      <div class="row">
-                                        <button class="btn btn-primary mx-3">{{ __('Generate Strings') }}</button>
+                                        <form method="POST" action="{{ route('admin.extract-localize-string') }}">
+                                            @csrf
+                                            <input type="hidden" name="directory" value="{{ resource_path('views/frontend') }}">
+                                            <input type="hidden" name="language_code" value="{{ $language->lang }}">
+                                            <input type="hidden" name="file_name" value="frontend">
+
+                                            <button type="submit" class="btn btn-primary mx-3">{{ __('Generate Strings') }}</button>
+                                        </form>
+
                                         <button class="btn btn-dark mx-3">{{ __('Translate Strings') }}</button>
 
                                      </div>
