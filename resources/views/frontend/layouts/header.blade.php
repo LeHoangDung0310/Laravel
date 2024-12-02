@@ -12,9 +12,9 @@
 
                         <ul class="topbar-sosmed p-0">
                             @foreach ($socialLinks as $link)
-                            <li>
-                                <a href="{{ $link->url }}"><i class="{{ $link->icon }}"></i></a>
-                            </li>
+                                <li>
+                                    <a href="{{ $link->url }}"><i class="{{ $link->icon }}"></i></a>
+                                </li>
                             @endforeach
 
                         </ul>
@@ -28,14 +28,16 @@
                         <div class="topbar_language">
                             <select id="site-language">
                                 @foreach ($languages as $language)
-                                    <option value="{{ $language->lang }}" {{ getLangauge() === $language->lang ? 'selected' : '' }}>{{ $language->name }}</option>
+                                    <option value="{{ $language->lang }}"
+                                        {{ getLangauge() === $language->lang ? 'selected' : '' }}>{{ $language->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
 
                         <ul class="topbar-link">
-                            <li><a href="login.html">Login</a></li>
-                            <li><a href="register.html">Register</a></li>
+                            <li><a href="{{ route('login') }}">{{ __('frontend.Login') }}</a></li>
+                            <li><a href="{{ route('register') }}">{{ __('frontend.Register') }}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -105,7 +107,9 @@
                                                 id="example-search-input4" name="search">
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" class="btn btn-outline-secondary border-left-0 rounded-0 rounded-right"><i class="fa fa-search"></i></button>
+                                            <button type="submit"
+                                                class="btn btn-outline-secondary border-left-0 rounded-0 rounded-right"><i
+                                                    class="fa fa-search"></i></button>
                                         </div>
                                     </div>
 
