@@ -47,7 +47,13 @@
                                                     class="btn btn-primary mx-3">{{ __('Generate Strings') }}</button>
                                             </form>
 
-                                            <button class="btn btn-dark mx-3">{{ __('Translate Strings') }}</button>
+                                            <form class="translate-from" method="POST"
+                                                action="{{ route('admin.translate-string') }}">
+                                                <input type="hidden" name="language_code" value="{{ $language->lang }}">
+                                                <input type="hidden" name="file_name" value="frontend">
+                                                <button  type="submit"
+                                                    class="btn btn-dark mx-3 translate-button">{{ __('Translate Strings') }}</button>
+                                            </form>
 
                                         </div>
                                     </div>
@@ -87,13 +93,11 @@
                                                     <td>{{ $value }}</td>
                                                     <td>
 
-                                                        <button
-                                                        data-langcode="{{ $language->lang }}"
-                                                        data-key="{{ $key }}"
-                                                        data-value="{{ $value }}"
-                                                        data-filename="frontend"
-                                                        type="button" class="btn btn-primary modal_btn" data-toggle="modal"
-                                                            data-target="#exampleModal">
+                                                        <button data-langcode="{{ $language->lang }}"
+                                                            data-key="{{ $key }}"
+                                                            data-value="{{ $value }}" data-filename="frontend"
+                                                            type="button" class="btn btn-primary modal_btn"
+                                                            data-toggle="modal" data-target="#exampleModal">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
                                                     </td>
@@ -140,7 +144,8 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>
+                            <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">{{ __('Close') }}</button>
                             <button type="submit" class="btn btn-primary">{{ __('Save changes') }}</button>
                         </div>
                     </form>
@@ -162,7 +167,7 @@
             });
         @endforeach
 
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('.modal_btn').on('click', function() {
                 let langCode = $(this).data('langcode');
                 let key = $(this).data('key');
@@ -178,9 +183,33 @@
                 $('input[name="key"]').val(key)
                 $('input[name="value"]').val(value)
                 $('input[name="file_name"]').val(filename)
+            })
 
-
-
+            $('.translate-from').on('submit', function(e) {
+                e.preventDefault();
+                let formData = $(this).serialize();
+                $.ajax({
+                    method: 'POST',
+                    url: "{{ route('admin.translate-string') }}",
+                    data: formData,
+                    beforeSend: function(){
+                        $('.translate-button').text("Translating Please Wait...")
+                        $('.translate-button').prop('disabled', true);
+                    },
+                    success: function(data) {
+                        if (data.status == 'success') {
+                            Swal.fire(
+                                'Done!',
+                                data.message,
+                                'success'
+                            )
+                            window.location.reload();
+                        }
+                    },
+                    error: function(data) {
+                        console.log(data);
+                    }
+                })
             })
         })
     </script>

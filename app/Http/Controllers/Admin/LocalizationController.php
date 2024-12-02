@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -80,6 +81,108 @@ class LocalizationController extends Controller
         return redirect()->back();
 
     }
+
+    function translateString(Request $request)
+    {
+        try {
+            $langCode = $request->language_code;
+            $languageStrings = trans($request->file_name, [], $request->language_code);
+            $keyStrings = array_keys($languageStrings);
+
+            // Khởi tạo mảng kết quả dịch
+            $translatedValues = [];
+
+            // Chia nhỏ mảng thành các chunks, mỗi chunk có tổng độ dài < 999 ký tự
+            $currentChunk = [];
+            $currentLength = 0;
+            $chunks = [];
+
+            foreach ($languageStrings as $key => $text) {
+                $textLength = strlen($text);
+
+                if ($currentLength + $textLength > 900) { // để buffer 99 ký tự
+                    $chunks[] = $currentChunk;
+                    $currentChunk = [];
+                    $currentLength = 0;
+                }
+
+                $currentChunk[] = [
+                    "Text" => $text,
+                    "originalKey" => $key
+                ];
+                $currentLength += $textLength;
+            }
+
+            // Thêm chunk cuối cùng nếu còn
+            if (!empty($currentChunk)) {
+                $chunks[] = $currentChunk;
+            }
+
+            // Xử lý từng chunk
+            foreach ($chunks as $chunk) {
+                $textsToTranslate = array_map(function ($item) {
+                    return ["Text" => $item["Text"]];
+                }, $chunk);
+
+                $response = Http::withOptions([
+                    'verify' => false,
+                ])->withHeaders([
+                    'x-rapidapi-host' => 'microsoft-translator-text-api3.p.rapidapi.com',
+                    'x-rapidapi-key' => 'ca17318d92msh7f1bb4f8a7ef739p136c82jsn99d73ec817eb',
+                    'Content-Type' => 'application/json',
+                ])->post("https://microsoft-translator-text-api3.p.rapidapi.com/translate?to={$langCode}&api-version=3.0", $textsToTranslate);
+
+                if (!$response->successful()) {
+                    throw new \Exception('Translation API request failed: ' . $response->body());
+                }
+
+                $translations = $response->json();
+
+                // Ghép kết quả dịch với key gốc
+                foreach ($translations as $index => $translation) {
+                    $originalKey = $chunk[$index]['originalKey'];
+                    $translatedValues[$originalKey] = $translation['translations'][0]['text'] ?? '';
+                }
+
+                // Delay nhỏ giữa các request để tránh rate limit
+                usleep(100000); // 100ms
+            }
+
+            // Kiểm tra số lượng phần tử
+            if (count($keyStrings) !== count($translatedValues)) {
+                throw new \Exception(sprintf(
+                    "Translation mismatch: Expected %d items but got %d",
+                    count($keyStrings),
+                    count($translatedValues)
+                ));
+            }
+
+            // Format PHP array string
+            $phpArray = "<?php\n\nreturn array (\n";
+            foreach ($translatedValues as $key => $value) {
+                $phpArray .= "  '" . addslashes($key) . "' => '" . addslashes($value) . "',\n";
+            }
+            $phpArray .= ");\n";
+
+            file_put_contents(lang_path($langCode . '/' . $request->file_name . '.php'), $phpArray);
+
+            return response([
+                'status' => 'success',
+                'message' => __('admin.Translation is completed')
+            ]);
+        } catch (\Throwable $th) {
+            \Log::error('Translation failed:', [
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ]);
+
+            return response([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
 
 
 }
