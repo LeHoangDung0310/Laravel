@@ -86,5 +86,8 @@ return array(
     'Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\\\'t receive the email, we will gladly send you another.' => 'Cảm ơn bạn đã đăng ký! Trước khi bắt đầu, bạn có thể xác minh địa chỉ email của mình bằng cách nhấp vào liên kết chúng tôi vừa gửi qua email cho bạn không? Nếu bạn không nhận được email, chúng tôi sẽ vui lòng gửi lại.',
     'A new verification link has been sent to the email address you provided during registration.' => 'Một liên kết xác minh mới đã được gửi tới địa chỉ email bạn cung cấp khi đăng ký.',
     'Resend Verification Email' => 'Gửi lại email xác minh',
+    'Email verified successfully. You can now login.' => 'Xác thực email thành công. Bạn có thể đăng nhập ngay bây giờ.',
+    'Your email has already been verified. Please login.' => 'Email của bạn đã được xác thực trước đó. Vui lòng đăng nhập.',
+    'User not found' => 'Không tìm thấy người dùng',
     'Log Out' => 'Đăng xuất',
 );

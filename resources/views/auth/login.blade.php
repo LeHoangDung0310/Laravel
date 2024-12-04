@@ -4,6 +4,13 @@
     <!-- login -->
     <section class="wrap__section">
         <div class="container">
+            <!-- Thêm phần hiển thị thông báo success -->
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
             <div class="row">
                 <div class="col-md-12">
                     <div class="card mx-auto" style="max-width: 380px;">
