@@ -128,7 +128,9 @@ class LocalizationController extends Controller
                             'X-RapidAPI-Host' => getSetting('site_microsoft_api_host'),
                             'X-RapidAPI-Key' => getSetting('site_microsoft_api_key'),
                             'Content-Type' => 'application/json',
-                        ])->post("https://microsoft-translator-text.p.rapidapi.com/translate?to={$langCode}&from=en&api-version=3.0", $textsArray);
+                        ])
+                        ->withoutVerifying() 
+                        ->post("https://microsoft-translator-text.p.rapidapi.com/translate?to={$langCode}&from=en&api-version=3.0", $textsArray);
 
                         if (!$response->successful()) {
                             throw new \Exception('API request failed: ' . $response->body());

@@ -6,7 +6,9 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="index.html">{{ __('admin.Stisla') }}</a>
+            <a href="dashboard">
+                <img src="{{ asset($settings['site_logo']) }}" width="50%" alt="" class="img-fluid logo">
+            </a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="index.html">{{ __('admin.St') }}</a>
