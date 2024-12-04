@@ -28,7 +28,7 @@ use App\Models\Setting;
 use Illuminate\Support\Facades\Route;
 
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function(){
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::get('login', [AdminAuthenticationController::class, 'login'])->name('login');
     Route::post('login', [AdminAuthenticationController::class, 'handleLogin'])->name('handle-login');
@@ -40,14 +40,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function(){
 
     Route::get('reset-password/{token}', [AdminAuthenticationController::class, 'resetPassword'])->name('reset-password');
     Route::post('reset-password', [AdminAuthenticationController::class, 'handleResetPassword'])->name('reset-password.send');
-
-
 });
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']], function(){
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     /**Profile Routes */
-    Route::put('profile-password-update/{id}', [ ProfileController::class, 'passwordUpdate'])->name('profile-password.update');
+    Route::put('profile-password-update/{id}', [ProfileController::class, 'passwordUpdate'])->name('profile-password.update');
     Route::resource('profile', ProfileController::class);
 
     /** Language Route */
@@ -114,6 +112,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
     Route::put('general-setting', [SettingController::class, 'updateGeneralSetting'])->name('general-setting.update');
     Route::put('seo-setting', [SettingController::class, 'updateSeoSetting'])->name('seo-setting.update');
     Route::put('appearance-setting', [SettingController::class, 'updateAppearanceSetting'])->name('appearance-setting.update');
+    Route::put('microsoft-api-setting', [SettingController::class, 'updateMicrosoftApiSetting'])->name('microsoft-api-setting.update');
 
     /** Role and Permissions Routes */
     Route::get('role', [RolePermisionController::class, 'index'])->name('role.index');
@@ -136,6 +135,4 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['admin']],
 
 
     Route::post('translate-string', [LocalizationController::class, 'translateString'])->name('translate-string');
-
 });
-

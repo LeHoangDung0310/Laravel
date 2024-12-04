@@ -21,7 +21,10 @@
                 <div class="tab-content tab-bordered" id="myTab3Content">
                     @foreach ($languages as $language)
                         @php
-                            $footerTitle = \App\Models\FooterTitle::where(['language' => $language->lang, 'key' => 'grid_one_title'])->first();
+                            $footerTitle = \App\Models\FooterTitle::where([
+                                'language' => $language->lang,
+                                'key' => 'grid_one_title',
+                            ])->first();
 
                         @endphp
                         <div class="tab-pane fade show {{ $loop->index === 0 ? 'active' : '' }}"
@@ -31,14 +34,16 @@
                                     @csrf
                                     <div class="form-group">
                                         <label for="">{{ __('admin.Footer Title') }}</label>
-                                        <input type="text" class="form-control" name="title" value="{{ $footerTitle->value }}">
-                                        <input type="hidden" value="{{ $language->lang }}" class="form-control" name="language">
+                                        <input type="text" class="form-control" name="title"
+                                            value="{{ @$footerTitle->value }}">
+                                        <input type="hidden" value="{{ $language->lang }}" class="form-control"
+                                            name="language">
                                         @error('title')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                       <button type="submit" class="btn btn-primary">{{ __('admin.Save') }}</button>
+                                        <button type="submit" class="btn btn-primary">{{ __('admin.Save') }}</button>
 
                                     </div>
                                 </form>
@@ -110,9 +115,10 @@
                                                     </td>
 
                                                     <td>
-                                                        <a href="{{ route('admin.footer-grid-one.edit', $item->id) }}" class="btn btn-primary"><i
-                                                                class="fas fa-edit"></i></a>
-                                                        <a href="{{ route('admin.footer-grid-one.destroy', $item->id) }}" class="btn btn-danger delete-item"><i
+                                                        <a href="{{ route('admin.footer-grid-one.edit', $item->id) }}"
+                                                            class="btn btn-primary"><i class="fas fa-edit"></i></a>
+                                                        <a href="{{ route('admin.footer-grid-one.destroy', $item->id) }}"
+                                                            class="btn btn-danger delete-item"><i
                                                                 class="fas fa-trash-alt"></i></a>
                                                     </td>
                                                 </tr>

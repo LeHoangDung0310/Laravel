@@ -26,7 +26,8 @@ class SettingController extends Controller
     }
 
 
-    function updateGeneralSetting(AdminGeneralSettingUpdateRequest $request) : RedirectResponse {
+    function updateGeneralSetting(AdminGeneralSettingUpdateRequest $request): RedirectResponse
+    {
 
         $logoPath = $this->handleFileUpload($request, 'site_logo');
         $faviconPath = $this->handleFileUpload($request, 'site_favicon');
@@ -36,14 +37,14 @@ class SettingController extends Controller
             ['value' => $request->site_name]
         );
 
-        if(!empty($logoPath)){
+        if (!empty($logoPath)) {
             Setting::updateOrCreate(
                 ['key' => 'site_logo'],
                 ['value' => $logoPath]
             );
         }
 
-        if(!empty($faviconPath)){
+        if (!empty($faviconPath)) {
             Setting::updateOrCreate(
                 ['key' => 'site_favicon'],
                 ['value' => $faviconPath]
@@ -56,7 +57,8 @@ class SettingController extends Controller
     }
 
 
-    function updateSeoSetting(AdminSeoSettingUpdateRequest $request) : RedirectResponse {
+    function updateSeoSetting(AdminSeoSettingUpdateRequest $request): RedirectResponse
+    {
         Setting::updateOrCreate(
             ['key' => 'site_seo_title'],
             ['value' => $request->site_seo_title]
@@ -80,7 +82,8 @@ class SettingController extends Controller
         return redirect()->back();
     }
 
-    function updateAppearanceSetting(Request $request): RedirectResponse {
+    function updateAppearanceSetting(Request $request): RedirectResponse
+    {
         $request->validate([
             'site_color' => ['required', 'max:200']
         ]);
@@ -95,4 +98,26 @@ class SettingController extends Controller
         return redirect()->back();
     }
 
+    function updateMicrosoftApiSetting(Request $request): RedirectResponse
+    {
+
+        $request->validate([
+            'site_microsoft_api_host' => ['required'],
+            'site_microsoft_api_key' => ['required'],
+        ]);
+
+        Setting::updateOrCreate(
+            ['key' => 'site_microsoft_api_host'],
+            ['value' => $request->site_microsoft_api_host]
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'site_microsoft_api_key'],
+            ['value' => $request->site_microsoft_api_key]
+        );
+
+        toast(__('admin.Updated Successfully!'), 'success');
+
+        return redirect()->back();
+    }
 }

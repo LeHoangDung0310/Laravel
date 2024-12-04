@@ -7,6 +7,7 @@ use App\Http\Requests\AdminCategoryCreateRequest;
 use App\Http\Requests\AdminCategoryUpdateRequest;
 use App\Models\Category;
 use App\Models\Language;
+use App\Models\News;
 use Faker\Provider\ar_EG\Company;
 use Illuminate\Http\Request;
 
@@ -52,7 +53,7 @@ class CategoryController extends Controller
         $category->status = $request->status;
         $category->save();
 
-        toast(__('admin.Created Successfully'),'success')->width('350');
+        toast(__('admin.Created Successfully'), 'success')->width('350');
 
         return redirect()->route('admin.category.index');
     }
@@ -88,7 +89,7 @@ class CategoryController extends Controller
         $category->status = $request->status;
         $category->save();
 
-        toast(__('admin.Update Successfully'),'success')->width('350');
+        toast(__('admin.Update Successfully'), 'success')->width('350');
 
         return redirect()->route('admin.category.index');
     }
@@ -98,12 +99,17 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-       try {
+
+        try {
             $category = Category::findOrFail($id);
+            $news = News::where('category_id', $category->id)->get();
+            foreach ($news as $item) {
+                $item->tags()->delete();
+            }
             $category->delete();
             return response(['status' => 'success', 'message' => __('admin.Deleted Successfully!')]);
-       } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return response(['status' => 'error', 'message' => __('admin.Someting went wrong!')]);
-       }
+        }
     }
 }

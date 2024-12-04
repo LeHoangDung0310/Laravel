@@ -41,29 +41,37 @@ class HomeController extends Controller
 
         $HomeSectionSetting = HomeSectionSetting::where('language', getLangauge())->first();
 
-        $categorySectionOne = News::where('category_id', $HomeSectionSetting->category_section_one)
-            ->activeEntries()->withLocalize()
-            ->orderBy('id', 'DESC')
-            ->take(8)
-            ->get();
+        if ($HomeSectionSetting) {
+            $categorySectionOne = News::where('category_id', $HomeSectionSetting->category_section_one)
+                ->activeEntries()->withLocalize()
+                ->orderBy('id', 'DESC')
+                ->take(8)
+                ->get();
 
-        $categorySectionTwo = News::where('category_id', $HomeSectionSetting->category_section_two)
-            ->activeEntries()->withLocalize()
-            ->orderBy('id', 'DESC')
-            ->take(8)
-            ->get();
+            $categorySectionTwo = News::where('category_id', $HomeSectionSetting->category_section_two)
+                ->activeEntries()->withLocalize()
+                ->orderBy('id', 'DESC')
+                ->take(8)
+                ->get();
 
-        $categorySectionThree = News::where('category_id', $HomeSectionSetting->category_section_three)
-            ->activeEntries()->withLocalize()
-            ->orderBy('id', 'DESC')
-            ->take(6)
-            ->get();
+            $categorySectionThree = News::where('category_id', $HomeSectionSetting->category_section_three)
+                ->activeEntries()->withLocalize()
+                ->orderBy('id', 'DESC')
+                ->take(6)
+                ->get();
 
-        $categorySectionFour = News::where('category_id', $HomeSectionSetting->category_section_four)
-            ->activeEntries()->withLocalize()
-            ->orderBy('id', 'DESC')
-            ->take(4)
-            ->get();
+            $categorySectionFour = News::where('category_id', $HomeSectionSetting->category_section_four)
+                ->activeEntries()->withLocalize()
+                ->orderBy('id', 'DESC')
+                ->take(4)
+                ->get();
+        } else {
+            $categorySectionOne = collect();
+            $categorySectionTwo = collect();
+            $categorySectionThree = collect();
+            $categorySectionFour = collect();
+        }
+
 
         $mostViewedPosts = News::activeEntries()->withLocalize()
             ->orderBy('views', 'DESC')

@@ -99,8 +99,8 @@
                     'admin.social-link.*',
                     'admin.footer-info.*',
                     'admin.footer-grid-one.*',
-                    'admin.subscribers.*',
                     'admin.footer-grid-three.*',
+                    'admin.footer-grid-two.*',
                 ]) }}
             ">
                     <a href="#" class="nav-link has-dropdown"><i class="far fa-file-alt"></i>
@@ -113,7 +113,7 @@
                         <li class="{{ setSidebarActive(['admin.footer-grid-one.*']) }}"><a class="nav-link"
                                 href="{{ route('admin.footer-grid-one.index') }}">{{ __('admin.Footer Grid One') }}</a>
                         </li>
-                        <li class="{{ setSidebarActive(['admin.subscribers.*']) }}"><a class="nav-link"
+                        <li class="{{ setSidebarActive(['admin.footer-grid-two.*']) }}"><a class="nav-link"
                                 href="{{ route('admin.footer-grid-two.index') }}">{{ __('admin.Footer Grid Two') }}</a>
                         </li>
                         <li class="{{ setSidebarActive(['admin.footer-grid-three.*']) }}"><a class="nav-link"
@@ -125,14 +125,15 @@
             @endif
 
             @if (canAccess(['access management index']))
-                <li class="dropdown
-                {{ setSidebarActive(['admin.role.*']) }}
+                <li
+                    class="dropdown
+                {{ setSidebarActive(['admin.role.*', 'admin.role-users.*']) }}
             ">
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-user-shield"></i>
                         <span>{{ __('admin.Access Management') }}</span></a>
                     <ul class="dropdown-menu">
 
-                        <li class="{{ setSidebarActive(['admin.role-user.*']) }}"><a class="nav-link"
+                        <li class="{{ setSidebarActive(['admin.role-users.*']) }}"><a class="nav-link"
                                 href="{{ route('admin.role-users.index') }}">{{ __('admin.Role Users') }}</a></li>
 
                         <li class="{{ setSidebarActive(['admin.role.*']) }}"><a class="nav-link"
