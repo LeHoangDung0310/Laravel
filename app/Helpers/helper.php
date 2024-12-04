@@ -8,15 +8,15 @@ use PhpParser\Node\Expr\Cast\String_;
 
 function formatTags(array $tags): String
 {
-   return implode(',', $tags);
+    return implode(',', $tags);
 }
 
 /** get selected language from session */
 function getLangauge(): string
 {
-    if(session()->has('language')){
+    if (session()->has('language')) {
         return session('language');
-    }else {
+    } else {
         try {
             $language = Language::where('default', 1)->first();
             setLanguage($language->lang);
@@ -38,7 +38,7 @@ function setLanguage(string $code): void
 
 /** Truncate text */
 
-function truncate(string $text, int $limit = 50): String
+function truncate(string $text, int $limit = 45): String
 {
     return \Str::limit($text, $limit, '...');
 }
@@ -47,12 +47,12 @@ function truncate(string $text, int $limit = 50): String
 
 function convertToKFormat(int $number): String
 {
-    if($number < 1000){
+    if ($number < 1000) {
         return $number;
-    }elseif($number < 1000000){
+    } elseif ($number < 1000000) {
         return round($number / 1000, 1) . 'K';
-    }else {
-        return round($number / 1000000, 1). 'M';
+    } else {
+        return round($number / 1000000, 1) . 'M';
     }
 }
 
@@ -60,8 +60,8 @@ function convertToKFormat(int $number): String
 
 function setSidebarActive(array $routes): ?string
 {
-    foreach($routes as $route){
-        if(request()->routeIs($route)){
+    foreach ($routes as $route) {
+        if (request()->routeIs($route)) {
             return 'active';
         }
     }
@@ -70,35 +70,38 @@ function setSidebarActive(array $routes): ?string
 
 /** get Setting */
 
-function getSetting($key){
+function getSetting($key)
+{
     $data = Setting::where('key', $key)->first();
     return $data->value;
 }
 
 /** check permission */
 
-function canAccess(array $permissions){
+function canAccess(array $permissions)
+{
 
-   $permission = auth()->guard('admin')->user()->hasAnyPermission($permissions);
-   $superAdmin = auth()->guard('admin')->user()->hasRole('Super Admin');
+    $permission = auth()->guard('admin')->user()->hasAnyPermission($permissions);
+    $superAdmin = auth()->guard('admin')->user()->hasRole('Super Admin');
 
-   if($permission || $superAdmin){
-    return true;
-   }else {
-    return false;
-   }
-
+    if ($permission || $superAdmin) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /** get admin role */
 
-function getRole(){
+function getRole()
+{
     $role = auth()->guard('admin')->user()->getRoleNames();
     return $role->first();
 }
 
 /** check user permission */
 
-function checkPermission(string $permission){
+function checkPermission(string $permission)
+{
     return auth()->guard('admin')->user()->hasPermissionTo($permission);
 }

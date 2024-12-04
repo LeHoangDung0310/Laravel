@@ -98,35 +98,42 @@ class LocalizationController extends Controller
 
     function translateString(Request $request)
     {
-        $langCode = $request->language_code;
+        try {
 
-        $languageStrings = trans($request->file_name, [], $request->language_code);
+            $langCode = $request->language_code;
 
-        $keyStirngs = array_keys($languageStrings);
+            $languageStrings = trans($request->file_name, [], $request->language_code);
 
-        $text = implode(' || ', $keyStirngs);
+            $keyStirngs = array_keys($languageStrings);
 
-        $response = Http::withHeaders([
-            'X-RapidAPI-Host' => getSetting('site_microsoft_api_host'),
-            'X-RapidAPI-Key' => getSetting('site_microsoft_api_key'),
-            'content-type' => 'application/json',
-        ])
-            ->post("https://microsoft-translator-text.p.rapidapi.com/translate?api-version=3.0&to%5B0%5D=$langCode&textType=plain&profanityAction=NoAction", [
-                [
-                    "Text" => $text
-                ]
-            ]);
+            $text = implode(' | ', $keyStirngs);
 
-        $translatedText = json_decode($response->body())[0]->translations[0]->text;
 
-        $translatedValues = explode(' || ', $translatedText);
+            $response = Http::withHeaders([
+                'X-RapidAPI-Host' => getSetting('site_microsoft_api_host'),
+                'X-RapidAPI-Key' => getSetting('site_microsoft_api_key'),
+                'content-type' => 'application/json',
+            ])
+                ->post("https://microsoft-translator-text.p.rapidapi.com/translate?api-version=3.0&to%5B0%5D=$langCode&textType=plain&profanityAction=NoAction", [
+                    [
+                        "Text" => $text
+                    ]
+                ]);
 
-        $updatedArray = array_combine($keyStirngs, $translatedValues);
 
-        $phpArray = "<?php\n\nreturn " . var_export($updatedArray, true) . ";\n";
+            $translatedText = json_decode($response->body())[0]->translations[0]->text;
 
-        file_put_contents(lang_path($langCode . '/' . $request->file_name . '.php'), $phpArray);
+            $translatedValues = explode(' | ', $translatedText);
 
-        return response(['status' => 'success', __('admin.Translation is completed')]);
+            $updatedArray = array_combine($keyStirngs, $translatedValues);
+
+            $phpArray = "<?php\n\nreturn " . var_export($updatedArray, true) . ";\n";
+
+            file_put_contents(lang_path($langCode . '/' . $request->file_name . '.php'), $phpArray);
+
+            return response(['status' => 'success', __('admin.Translation is completed')]);
+        } catch (\Throwable $th) {
+            return response(['status' => 'error', $th->getMessage()]);
+        }
     }
 }

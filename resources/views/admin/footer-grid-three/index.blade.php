@@ -22,7 +22,10 @@
                 <div class="tab-content tab-bordered" id="myTab3Content">
                     @foreach ($languages as $language)
                         @php
-                            $footerTitle = \App\Models\FooterTitle::where(['language' => $language->lang, 'key' => 'grid_three_title'])->first();
+                            $footerTitle = \App\Models\FooterTitle::where([
+                                'language' => $language->lang,
+                                'key' => 'grid_three_title',
+                            ])->first();
 
                         @endphp
                         <div class="tab-pane fade show {{ $loop->index === 0 ? 'active' : '' }}"
@@ -32,14 +35,16 @@
                                     @csrf
                                     <div class="form-group">
                                         <label for="">{{ __('admin.Footer Title') }}</label>
-                                        <input type="text" class="form-control" name="title" value="{{ @$footerTitle->value }}">
-                                        <input type="hidden" value="{{ $language->lang }}" class="form-control" name="language">
+                                        <input type="text" class="form-control" name="title"
+                                            value="{{ @$footerTitle->value }}">
+                                        <input type="hidden" value="{{ $language->lang }}" class="form-control"
+                                            name="language">
                                         @error('title')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                       <button type="submit" class="btn btn-primary">{{ __('admin.Save') }}</button>
+                                        <button type="submit" class="btn btn-primary">{{ __('admin.Save') }}</button>
 
                                     </div>
                                 </form>
@@ -68,7 +73,7 @@
                     @foreach ($languages as $language)
                         <li class="nav-item">
                             <a class="nav-link {{ $loop->index === 0 ? 'active' : '' }}" id="home-tab2" data-toggle="tab"
-                                href="#home-{{ $language->lang }}" role="tab" aria-controls="home"
+                                href="#dtable-{{ $language->lang }}" role="tab" aria-controls="home"
                                 aria-selected="true">{{ $language->name }}</a>
                         </li>
                     @endforeach
@@ -80,7 +85,7 @@
                             $footer = \App\Models\FooterGridThree::where('language', $language->lang)->get();
                         @endphp
                         <div class="tab-pane fade show {{ $loop->index === 0 ? 'active' : '' }}"
-                            id="home-{{ $language->lang }}" role="tabpanel" aria-labelledby="home-tab2">
+                            id="dtable-{{ $language->lang }}" role="tabpanel" aria-labelledby="home-tab2">
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-striped" id="table-{{ $language->lang }}">
@@ -111,9 +116,10 @@
                                                     </td>
 
                                                     <td>
-                                                        <a href="{{ route('admin.footer-grid-three.edit', $item->id) }}" class="btn btn-primary"><i
-                                                                class="fas fa-edit"></i></a>
-                                                        <a href="{{ route('admin.footer-grid-three.destroy', $item->id) }}" class="btn btn-danger delete-item"><i
+                                                        <a href="{{ route('admin.footer-grid-three.edit', $item->id) }}"
+                                                            class="btn btn-primary"><i class="fas fa-edit"></i></a>
+                                                        <a href="{{ route('admin.footer-grid-three.destroy', $item->id) }}"
+                                                            class="btn btn-danger delete-item"><i
                                                                 class="fas fa-trash-alt"></i></a>
                                                     </td>
                                                 </tr>
