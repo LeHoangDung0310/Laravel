@@ -99,41 +99,88 @@ class LocalizationController extends Controller
     function translateString(Request $request)
     {
         try {
-
             $langCode = $request->language_code;
-
             $languageStrings = trans($request->file_name, [], $request->language_code);
+            $keyStrings = array_keys($languageStrings);
 
-            $keyStirngs = array_keys($languageStrings);
+            $chunkSize = 50;
+            $stringChunks = array_chunk($keyStrings, $chunkSize);
 
-            $text = implode(' | ', $keyStirngs);
+            $allTranslatedValues = [];
 
+            foreach ($stringChunks as $chunkIndex => $chunk) {
+                $maxRetries = 3;
+                $retryCount = 0;
+                $success = false;
 
-            $response = Http::withHeaders([
-                'X-RapidAPI-Host' => getSetting('site_microsoft_api_host'),
-                'X-RapidAPI-Key' => getSetting('site_microsoft_api_key'),
-                'content-type' => 'application/json',
-            ])
-                ->post("https://microsoft-translator-text.p.rapidapi.com/translate?api-version=3.0&to%5B0%5D=$langCode&textType=plain&profanityAction=NoAction", [
-                    [
-                        "Text" => $text
-                    ]
-                ]);
+                while (!$success && $retryCount < $maxRetries) {
+                    try {
+                        if (!empty($allTranslatedValues) || $retryCount > 0) {
+                            sleep(2);
+                        }
 
+                        // Format texts array properly for Microsoft API
+                        $textsArray = array_map(function ($text) {
+                            return ['Text' => $text];
+                        }, $chunk);
 
-            $translatedText = json_decode($response->body())[0]->translations[0]->text;
+                        $response = Http::withHeaders([
+                            'X-RapidAPI-Host' => getSetting('site_microsoft_api_host'),
+                            'X-RapidAPI-Key' => getSetting('site_microsoft_api_key'),
+                            'Content-Type' => 'application/json',
+                        ])->post("https://microsoft-translator-text.p.rapidapi.com/translate?to={$langCode}&from=en&api-version=3.0", $textsArray);
 
-            $translatedValues = explode(' | ', $translatedText);
+                        if (!$response->successful()) {
+                            throw new \Exception('API request failed: ' . $response->body());
+                        }
 
-            $updatedArray = array_combine($keyStirngs, $translatedValues);
+                        $translatedData = $response->json();
 
+                        $translatedValues = array_map(function ($item) {
+                            return $item['translations'][0]['text'] ?? '';
+                        }, $translatedData);
+
+                        if (count($translatedValues) !== count($chunk)) {
+                            throw new \Exception("Count mismatch for chunk $chunkIndex");
+                        }
+
+                        $allTranslatedValues = array_merge($allTranslatedValues, $translatedValues);
+                        $success = true;
+                    } catch (\Exception $e) {
+                        $retryCount++;
+                        \Log::warning("Retry $retryCount for chunk $chunkIndex: " . $e->getMessage());
+
+                        if ($retryCount >= $maxRetries) {
+                            throw $e;
+                        }
+                    }
+                }
+            }
+
+            if (count($allTranslatedValues) !== count($keyStrings)) {
+                throw new \Exception("Final translation count mismatch: expected " . count($keyStrings) . " but got " . count($allTranslatedValues));
+            }
+
+            $updatedArray = array_combine($keyStrings, $allTranslatedValues);
             $phpArray = "<?php\n\nreturn " . var_export($updatedArray, true) . ";\n";
 
             file_put_contents(lang_path($langCode . '/' . $request->file_name . '.php'), $phpArray);
 
-            return response(['status' => 'success', __('admin.Translation is completed')]);
+            return response([
+                'status' => 'success',
+                'message' => __('admin.Translation is completed')
+            ]);
         } catch (\Throwable $th) {
-            return response(['status' => 'error', $th->getMessage()]);
+            \Log::error('Translation failed', [
+                'error' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ]);
+
+            return response([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 500);
         }
     }
 }
